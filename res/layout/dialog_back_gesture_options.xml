@@ -170,6 +170,15 @@
                   android:ellipsize="marquee" />
     </LinearLayout>
 
+    <Switch   
+        android:id="@+id/back_block_ime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/back_block_ime_title"
+        android:textAppearance="?android:attr/textAppearance"
+        style="@android:style/TextAppearance.Material.Subhead" />
+
     <Switch
         android:id="@+id/gesture_pill_switch"
         android:layout_width="match_parent"

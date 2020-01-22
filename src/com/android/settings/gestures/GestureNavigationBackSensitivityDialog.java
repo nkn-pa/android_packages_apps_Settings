@@ -43,8 +43,9 @@ public class GestureNavigationBackSensitivityDialog extends InstrumentedDialogFr
     private static final String KEY_BACK_SENSITIVITY = "back_sensitivity";
     private static final String KEY_BACK_HEIGHT = "back_height";
     private static final String KEY_HOME_HANDLE_SIZE = "home_handle_width";
+    private static final String KEY_BACK_BLOCK_IME = "back_block_ime";
 
-    public static void show(SystemNavigationGestureSettings parent, int sensitivity, int length, int height) {
+    public static void show(SystemNavigationGestureSettings parent, int sensitivity, int length, int height, boolean blockIme) {
         if (!parent.isAdded()) {
             return;
         }
@@ -55,6 +56,7 @@ public class GestureNavigationBackSensitivityDialog extends InstrumentedDialogFr
         bundle.putInt(KEY_BACK_SENSITIVITY, sensitivity);
         bundle.putInt(KEY_HOME_HANDLE_SIZE, length);
         bundle.putInt(KEY_BACK_HEIGHT, height);
+        bundle.putBoolean(KEY_BACK_BLOCK_IME, blockIme);
         dialog.setArguments(bundle);
         dialog.setTargetFragment(parent, 0);
         dialog.show(parent.getFragmentManager(), TAG);
@@ -75,6 +77,8 @@ public class GestureNavigationBackSensitivityDialog extends InstrumentedDialogFr
         seekBarHandleSize.setProgress(getArguments().getInt(KEY_HOME_HANDLE_SIZE));
         final SeekBar seekBarHeight = view.findViewById(R.id.back_height_seekbar);
         seekBarHeight.setProgress(getArguments().getInt(KEY_BACK_HEIGHT));
+        final Switch blockImeSwitch = view.findViewById(R.id.back_block_ime);
+        blockImeSwitch.setChecked(getArguments().getBoolean(KEY_BACK_BLOCK_IME));
         final Switch gesturePillSwitch = view.findViewById(R.id.gesture_pill_switch);
         mGesturePillSwitchChecked = Settings.System.getInt(getActivity().getContentResolver(),
                 Settings.System.GESTURE_PILL_TOGGLE, 0) == 1;
@@ -96,10 +100,13 @@ public class GestureNavigationBackSensitivityDialog extends InstrumentedDialogFr
                     getArguments().putInt(KEY_HOME_HANDLE_SIZE, length);
                     int height = seekBarHeight.getProgress();
                     getArguments().putInt(KEY_BACK_HEIGHT, height);
+                    boolean blockIme = blockImeSwitch.isChecked();
+                    getArguments().putBoolean(KEY_BACK_BLOCK_IME, blockIme);
                     SystemNavigationGestureSettings.setBackHeight(getActivity(), height);
                     SystemNavigationGestureSettings.setBackSensitivity(getActivity(),
                             getOverlayManager(), sensitivity);
                     SystemNavigationGestureSettings.setHomeHandleSize(getActivity(), length);
+                    SystemNavigationGestureSettings.setBackBlockIme(getActivity(), blockIme);
                     Settings.System.putInt(getActivity().getContentResolver(),
                             Settings.System.GESTURE_PILL_TOGGLE, mGesturePillSwitchChecked ? 1 : 0);
                     SystemNavigationGestureSettings.setBackGestureOverlaysToUse(getActivity());
